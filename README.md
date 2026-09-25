@@ -23,7 +23,7 @@ This repository provides **107 end-to-end reproducible Jupyter Notebooks** evalu
   - [3. Explainable Robustness Index (ERI)](#3-explainable-robustness-index-eri)
 - [Taxonomy of Evaluated Perturbations](#taxonomy-of-evaluated-perturbations)
 - [Datasets & Benchmark Architectures](#datasets--benchmark-architectures)
-  - [Datasets](#datasets)
+  - [Datasets & Public Resources](#datasets--public-resources)
   - [Evaluated Architectures](#evaluated-architectures)
 - [Empirical Benchmark Results](#empirical-benchmark-results)
   - [1. EgyPLI Dataset](#1-egypli-dataset)
@@ -143,19 +143,50 @@ The framework subjects test sets to 9 realistic environmental and sensor corrupt
 
 ## Datasets & Benchmark Architectures
 
-### Datasets
+### Datasets & Public Resources
 
-1. **EgyPLI (Egyptian Plant Leaves Identification)**:
-   - High-resolution leaf specimens across diverse botanical species.
-   - Ground-truth segmentation masks delineating precise leaf contours.
+The benchmarking framework evaluates models across four specialized plant and floral vision datasets equipped with ground-truth segmentation masks. The table below details the original sources and the associated preprocessed benchmarks (splits, LabelMe JSON annotation masks, and trained Keras model checkpoints):
+
+| Dataset Name | Benchmark ID | Focus / Domain | Original Source | Associated Benchmark Resources (Kaggle) |
+| :--- | :---: | :--- | :--- | :--- |
+| **Egyptian Plant Leaves Identification** | **EPLI / EgyPLI** | Plant leaf identification & pathology | [Nature Scientific Data (2025)](https://doi.org/10.1038/s41597-025-06539-8) | • [Dataset Splits](https://www.kaggle.com/datasets/ragibmehedi/egypli-split)<br>• [Annotated JSON Masks](https://www.kaggle.com/datasets/ragibmehedi/egypli-annotated-json-files)<br>• [Keras Model Checkpoints](https://www.kaggle.com/datasets/ragibmehedi/egypli-keras-files) |
+| **Bangladeshi Medicinal Leaves** | **BDMediLeaves** | Indigenous medicinal leaf classification | [ScienceDirect (Data in Brief)](https://www.sciencedirect.com/science/article/pii/S2352340923005887) | • [BDMediLeaves Benchmark](https://www.kaggle.com/datasets/ragibmehedi/bdmedidataset) |
+| **Flowers Recognition** | **FR (Alxmamaev)** | 5-class flower recognition & localization | [Kaggle (`alxmamaev/flowers-recognition`)](https://www.kaggle.com/datasets/alxmamaev/flowers-recognition) | • [Alxmamaev Flower Dataset](https://www.kaggle.com/datasets/ragibmehedi/alxmamaev-flower-dataset) |
+| **TensorFlow Flowers** | **FLRS (`tf_flowers`)** | Standard 5-class botanical vision dataset | [TensorFlow Datasets Catalog](https://www.tensorflow.org/datasets/catalog/tf_flowers) | • [TF Flowers Benchmark](https://www.kaggle.com/datasets/ragibmehedi/flower-dataset-tensorflow) |
+
+#### Dataset Profiles & Resource Breakdown
+
+1. **EPLI (Egyptian Plant Leaves Identification)**:
+   - **Domain**: High-resolution leaf specimens across Egyptian flora for species identification and health evaluation.
+   - **Original Source**: [Nature Scientific Data (DOI: 10.1038/s41597-025-06539-8)](https://doi.org/10.1038/s41597-025-06539-8)
+   - **Associated Resources**:
+     - [Dataset Splits (`ragibmehedi/egypli-split`)](https://www.kaggle.com/datasets/ragibmehedi/egypli-split): Stratified fold splits for training, validation, and testing.
+     - [Annotated JSON Files (`ragibmehedi/egypli-annotated-json-files`)](https://www.kaggle.com/datasets/ragibmehedi/egypli-annotated-json-files): LabelMe polygon coordinates for ground-truth leaf segmentation.
+     - [Keras Checkpoints (`ragibmehedi/egypli-keras-files`)](https://www.kaggle.com/datasets/ragibmehedi/egypli-keras-files): Pre-trained model weights for all 8 evaluated architectures.
+   - **Repository Path**: `ETI_ERI/ETI_ERI_EgyPLI/`
+
 2. **BDMediLeaves (Bangladeshi Medicinal Leaves Dataset)**:
-   - Indigenous medicinal plant leaves categorized by therapeutic classes.
-   - Exact polygon annotations generated via LabelMe.
-3. **Alxmamaev Flowers Dataset**:
-   - Comprehensive flower categorization benchmark (daisy, dandelion, rose, sunflower, tulip).
-   - Polygon boundary annotations for floral foreground regions.
-4. **TensorFlow Flowers Dataset (`tf_flowers`)**:
-   - Standard 5-class botanical vision dataset paired with corresponding polygon segmentation ground truth.
+   - **Domain**: Indigenous medicinal plant leaves categorized by therapeutic classes.
+   - **Original Source**: [ScienceDirect / Elsevier Data in Brief (PII: S2352340923005887)](https://www.sciencedirect.com/science/article/pii/S2352340923005887)
+   - **Associated Resources**:
+     - [BDMedi Dataset (`ragibmehedi/bdmedidataset`)](https://www.kaggle.com/datasets/ragibmehedi/bdmedidataset): Full dataset structured into train/val/test partitions with corresponding polygon masks.
+   - **Repository Path**: `ETI_ERI/ETI_ERI_BDMediLeaves/`
+
+3. **FR Dataset (Flowers Recognition - Alxmamaev)**:
+   - **Domain**: Natural flower imagery covering daisy, dandelion, rose, sunflower, and tulip.
+   - **Original Source**: [Kaggle (`alxmamaev/flowers-recognition`)](https://www.kaggle.com/datasets/alxmamaev/flowers-recognition)
+   - **Associated Resources**:
+     - [Alxmamaev Flower Dataset (`ragibmehedi/alxmamaev-flower-dataset`)](https://www.kaggle.com/datasets/ragibmehedi/alxmamaev-flower-dataset): Stratified CSV split files and LabelMe JSON polygon masks for petal/corolla localization.
+   - **Repository Path**: `ETI_ERI/Alxmamaev_flower_dataset/`
+
+4. **FLRS Dataset (TensorFlow Flowers - `tf_flowers`)**:
+   - **Domain**: Canonical 5-class flower classification benchmark.
+   - **Original Source**: [TensorFlow Datasets Catalog (`tf_flowers`)](https://www.tensorflow.org/datasets/catalog/tf_flowers)
+   - **Associated Resources**:
+     - [TF Flower Dataset (`ragibmehedi/flower-dataset-tensorflow`)](https://www.kaggle.com/datasets/ragibmehedi/flower-dataset-tensorflow): Processed image splits and accompanying ground-truth segmentation masks.
+   - **Repository Path**: `ETI_ERI/flower_dataset_tensorflow/`
+
+
 
 ### Evaluated Architectures
 
@@ -286,11 +317,16 @@ pip install tensorflow opencv-python numpy pandas matplotlib scikit-learn
 
 ## Workflow & Reproduction Guide
 
-### Phase 1: Data Preprocessing & Splitting
-Run the dataset split notebooks to partition images into stratified training, validation, and test splits while generating index CSVs:
-- `ETI_ERI/ETI_ERI_EgyPLI/egypli-data-split-into-fold.ipynb`
-- `ETI_ERI/Alxmamaev_flower_dataset/alxmamaev-flower-dataset-split.ipynb`
-- `ETI_ERI/flower_dataset_tensorflow/tf-flowers-split.ipynb`
+### Phase 1: Data Acquisition & Splitting
+1. **Acquire Benchmarks**: Download or mount the datasets and ground-truth polygon annotations directly from Kaggle:
+   - **EPLI / EgyPLI**: [Splits](https://www.kaggle.com/datasets/ragibmehedi/egypli-split) | [JSON Masks](https://www.kaggle.com/datasets/ragibmehedi/egypli-annotated-json-files) | [Checkpoints](https://www.kaggle.com/datasets/ragibmehedi/egypli-keras-files)
+   - **BDMediLeaves**: [Dataset & Masks](https://www.kaggle.com/datasets/ragibmehedi/bdmedidataset)
+   - **FR (Flowers Recognition)**: [Dataset Splits & Masks](https://www.kaggle.com/datasets/ragibmehedi/alxmamaev-flower-dataset)
+   - **FLRS (TF Flowers)**: [Dataset Splits & Masks](https://www.kaggle.com/datasets/ragibmehedi/flower-dataset-tensorflow)
+2. **Execute Split Notebooks**: Generate stratified training, validation, and test splits and verify reproducibility:
+   - `ETI_ERI/ETI_ERI_EgyPLI/egypli-data-split-into-fold.ipynb`
+   - `ETI_ERI/Alxmamaev_flower_dataset/alxmamaev-flower-dataset-split.ipynb`
+   - `ETI_ERI/flower_dataset_tensorflow/tf-flowers-split.ipynb`
 
 ### Phase 2: Model Training & Evaluation
 Navigate to the corresponding `Model_training_validation_testing/` directory for any dataset and execute the notebook for your architecture of choice (e.g., `inceptionresnetv2-egypli.ipynb`). This trains the model, records learning curves, and saves the evaluation checkpoints.

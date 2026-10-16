@@ -45,7 +45,9 @@ This repository provides **107 end-to-end reproducible Jupyter Notebooks** bench
   - [4. Explainable Robustness Index (ERI)](#4-explainable-robustness-index-eri)
 - [Taxonomy of Evaluated Perturbations](#taxonomy-of-evaluated-perturbations)
 - [Datasets & Benchmark Architectures](#datasets--benchmark-architectures)
-  - [Datasets & Annotations](#datasets--annotations)
+  - [Datasets & Public Resources](#datasets--public-resources)
+  - [Dataset Specifications & Annotations](#dataset-specifications--annotations)
+  - [Dataset Profiles & Resource Breakdown](#dataset-profiles--resource-breakdown)
   - [Evaluated CNN Architectures](#evaluated-cnn-architectures)
   - [Training & Optimization Configurations](#training--optimization-configurations)
 - [Empirical Benchmark Results](#empirical-benchmark-results)
@@ -247,18 +249,61 @@ All 9 perturbations simulate realistic degradations encountered during image cap
 
 ## Datasets & Benchmark Architectures
 
-### Datasets & Annotations
+### Datasets & Public Resources
 
-Experiments evaluate 4 real-world image datasets encompassing botanical leaf and floral domains:
+The benchmarking framework evaluates models across four specialized plant and floral vision datasets equipped with ground-truth segmentation masks. The table below details the original sources, benchmark identifiers, focus domains, and associated benchmark resources (splits, LabelMe JSON annotation polygon masks, and trained Keras model checkpoints):
 
-| Dataset | Domain | Samples | Resolution | Classes / Target Species | Splitting Protocol |
-| :--- | :--- | :---: | :---: | :--- | :---: |
-| **EPLI** (EgyPLI) | Leaf Identification | 3,588 | $256 \times 256$ | 8 species (apple, berry, fig, guava, orange, plum, persimmon, tomato) | 80% Train, 10% Val, 10% Test |
-| **BDML** (BDMediLeaves)| Medicinal Leaves | 2,048 | $3024 \times 4032$ | 10 indigenous medicinal plant species (iPhone 13, natural light) | Pre-split (Train / Val / Test) |
-| **FLRS** (TF Flowers) | Flower Classification | 3,670 | Variable | 5 species (daisy, dandelion, rose, sunflower, tulip) | 80% Train, 10% Val, 10% Test |
-| **FR** (Flowers Recognition)| Flower Recognition | 4,317 | $320 \times 240$ | 5 species (daisy, dandelion, rose, sunflower, tulip) | 80% Train, 10% Val, 10% Test |
+| Dataset Name | Benchmark ID | Focus / Domain | Original Dataset Source | Associated Benchmark Resources (Kaggle) |
+| :--- | :---: | :--- | :--- | :--- |
+| **Egyptian Plant Leaves Identification** | **EPLI / EgyPLI** | Plant leaf identification & pathology | [Nature Scientific Data (2025)](https://doi.org/10.1038/s41597-025-06539-8) | • [Dataset Splits](https://www.kaggle.com/datasets/ragibmehedi/egypli-split)<br>• [Annotated JSON Masks](https://www.kaggle.com/datasets/ragibmehedi/egypli-annotated-json-files)<br>• [Keras Model Checkpoints](https://www.kaggle.com/datasets/ragibmehedi/egypli-keras-files) |
+| **Bangladeshi Medicinal Leaves** | **BDML / BDMediLeaves** | Indigenous medicinal leaf classification | [ScienceDirect (Data in Brief)](https://www.sciencedirect.com/science/article/pii/S2352340923005887) | • [BDMediLeaves Benchmark](https://www.kaggle.com/datasets/ragibmehedi/bdmedidataset) |
+| **TensorFlow Flowers** | **FLRS (`tf_flowers`)** | Standard 5-class botanical vision dataset | [TensorFlow Datasets Catalog](https://www.tensorflow.org/datasets/catalog/tf_flowers) | • [TF Flowers Benchmark](https://www.kaggle.com/datasets/ragibmehedi/flower-dataset-tensorflow) |
+| **Flowers Recognition** | **FR (Alxmamaev)** | 5-class flower recognition & localization | [Kaggle (`alxmamaev/flowers-recognition`)](https://www.kaggle.com/datasets/alxmamaev/flowers-recognition) | • [Alxmamaev Flower Dataset](https://www.kaggle.com/datasets/ragibmehedi/alxmamaev-flower-dataset) |
+
+### Dataset Specifications & Annotations
+
+Experiments evaluate the 4 real-world image datasets across varying botanical domains, image dimensions, and sample counts:
+
+| Dataset | Benchmark ID | Domain | Samples | Resolution | Classes / Target Species | Splitting Protocol |
+| :--- | :---: | :--- | :---: | :---: | :--- | :---: |
+| **EPLI** (EgyPLI) | `ETI_ERI_EgyPLI` | Leaf Identification | 3,588 | $256 \times 256$ | 8 species (apple, berry, fig, guava, orange, plum, persimmon, tomato) | 80% Train, 10% Val, 10% Test |
+| **BDML** (BDMediLeaves) | `ETI_ERI_BDMediLeaves` | Medicinal Leaves | 2,048 | $3024 \times 4032$ | 10 indigenous medicinal plant species (iPhone 13, natural light) | Pre-split (Train / Val / Test) |
+| **FLRS** (TF Flowers) | `flower_dataset_tensorflow` | Flower Classification | 3,670 | Variable | 5 species (daisy, dandelion, rose, sunflower, tulip) | 80% Train, 10% Val, 10% Test |
+| **FR** (Flowers Recognition) | `Alxmamaev_flower_dataset` | Flower Recognition | 4,317 | $320 \times 240$ | 5 species (daisy, dandelion, rose, sunflower, tulip) | 80% Train, 10% Val, 10% Test |
 
 - **Ground-Truth Masks**: All test samples were manually annotated with polygonal boundaries saved as JSON files and converted into binary masks representing strictly the target leaf or flower, excluding backgrounds.
+
+### Dataset Profiles & Resource Breakdown
+
+1. **EPLI (Egyptian Plant Leaves Identification)**:
+   - **Domain**: High-resolution leaf specimens across Egyptian flora for species identification and health evaluation (3,588 images across 8 species: apple, berry, fig, guava, orange, plum, persimmon, tomato).
+   - **Original Source**: [Nature Scientific Data (DOI: 10.1038/s41597-025-06539-8)](https://doi.org/10.1038/s41597-025-06539-8)
+   - **Associated Resources**:
+     - [Dataset Splits (`ragibmehedi/egypli-split`)](https://www.kaggle.com/datasets/ragibmehedi/egypli-split): Stratified fold splits for training, validation, and testing.
+     - [Annotated JSON Files (`ragibmehedi/egypli-annotated-json-files`)](https://www.kaggle.com/datasets/ragibmehedi/egypli-annotated-json-files): LabelMe polygon coordinates for ground-truth leaf segmentation.
+     - [Keras Checkpoints (`ragibmehedi/egypli-keras-files`)](https://www.kaggle.com/datasets/ragibmehedi/egypli-keras-files): Pre-trained model weights for all 8 evaluated architectures.
+   - **Repository Path**: `ETI_ERI/ETI_ERI_EgyPLI/`
+
+2. **BDML / BDMediLeaves (Bangladeshi Medicinal Leaves Dataset)**:
+   - **Domain**: Indigenous medicinal plant leaves categorized by therapeutic classes (2,048 original images from 10 species captured with iPhone 13 at $3024 \times 4032$).
+   - **Original Source**: [ScienceDirect / Elsevier Data in Brief (PII: S2352340923005887)](https://www.sciencedirect.com/science/article/pii/S2352340923005887)
+   - **Associated Resources**:
+     - [BDMedi Dataset (`ragibmehedi/bdmedidataset`)](https://www.kaggle.com/datasets/ragibmehedi/bdmedidataset): Full dataset structured into train/val/test partitions with corresponding polygon masks.
+   - **Repository Path**: `ETI_ERI/ETI_ERI_BDMediLeaves/`
+
+3. **FLRS Dataset (TensorFlow Flowers - `tf_flowers`)**:
+   - **Domain**: Canonical 5-class flower classification benchmark (3,670 images of daisy, dandelion, rose, sunflower, tulip).
+   - **Original Source**: [TensorFlow Datasets Catalog (`tf_flowers`)](https://www.tensorflow.org/datasets/catalog/tf_flowers)
+   - **Associated Resources**:
+     - [TF Flower Dataset (`ragibmehedi/flower-dataset-tensorflow`)](https://www.kaggle.com/datasets/ragibmehedi/flower-dataset-tensorflow): Processed image splits and accompanying ground-truth segmentation masks.
+   - **Repository Path**: `ETI_ERI/flower_dataset_tensorflow/`
+
+4. **FR Dataset (Flowers Recognition - Alxmamaev)**:
+   - **Domain**: Natural flower imagery covering daisy, dandelion, rose, sunflower, and tulip (4,317 images at $320 \times 240$).
+   - **Original Source**: [Kaggle (`alxmamaev/flowers-recognition`)](https://www.kaggle.com/datasets/alxmamaev/flowers-recognition)
+   - **Associated Resources**:
+     - [Alxmamaev Flower Dataset (`ragibmehedi/alxmamaev-flower-dataset`)](https://www.kaggle.com/datasets/ragibmehedi/alxmamaev-flower-dataset): Stratified CSV split files and LabelMe JSON polygon masks for petal/corolla localization.
+   - **Repository Path**: `ETI_ERI/Alxmamaev_flower_dataset/`
 
 ### Evaluated CNN Architectures
 1. **MobileNetV2**: Inverted residual blocks with linear bottlenecks and depthwise separable convolutions.
